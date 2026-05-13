@@ -27,7 +27,58 @@ export default function App() {
         <Text style={[{ fontWeight: "bold" }, { fontSize: 20 }]}>
           들어온 데이터 {props.clickCount}
         </Text>
-        <Button title="버튼이다!" onPress={props.onClick} />
+        <Button
+          title="버튼이다!"
+          onPress={() => {
+            props.onClick();
+          }}
+        />
+        <NestedSomeComponent01 onClick={props.onClick} />
+        <NestedSomeComponent02 onClick={props.onClick} />
+      </>
+    );
+  }
+
+  function NestedSomeComponent01(props: any) {
+    return (
+      <>
+        <Text
+          style={[
+            { fontWeight: "bold" },
+            { fontSize: 20 },
+            { backgroundColor: generateColor() },
+          ]}
+        >
+          someComponent
+        </Text>
+        <Text style={[{ fontWeight: "bold" }, { fontSize: 20 }]}>
+          들어온 데이터 {props.clickCount}
+        </Text>
+        <Button
+          title="버튼이다!"
+          onPress={() => {
+            props.onClick();
+          }}
+        />
+      </>
+    );
+  }
+  function NestedSomeComponent02(props: any) {
+    return (
+      <>
+        <Text
+          style={[
+            { fontWeight: "bold" },
+            { fontSize: 20 },
+            { backgroundColor: generateColor() },
+          ]}
+        >
+          someComponent
+        </Text>
+        <Text style={[{ fontWeight: "bold" }, { fontSize: 20 }]}>
+          들어온 데이터 {props.clickCount}
+        </Text>
+        <Button title="버튼이다!" onPress={() => {}} />
       </>
     );
   }
