@@ -1,9 +1,11 @@
 import { StatusBar } from "expo-status-bar";
-import { useState } from "react";
+import { createContext, useContext, useState } from "react";
 import { Button, StyleSheet, Text, View } from "react-native";
 
 export default function App() {
   const [clickCount, setClickCount] = useState<number>(0);
+  const [globalClickCount, setGlobalClickCount] = useState<number>(0);
+  const GlobalClickCountContext = createContext();
 
   const generateColor = (): string => {
     const randomColor = Math.floor(Math.random() * 16777215)
@@ -13,6 +15,8 @@ export default function App() {
   };
 
   function SomeComponent(props: any) {
+    const [globalCount, setGlobalCount] = useContext(GlobalClickCountContext);
+
     return (
       <>
         <Text
@@ -25,7 +29,7 @@ export default function App() {
           someComponent
         </Text>
         <Text style={[{ fontWeight: "bold" }, { fontSize: 20 }]}>
-          들어온 데이터 {props.clickCount}
+          글로벌 클릭 카운트 {globalClickCount}
         </Text>
         <Button
           title="버튼이다!"
@@ -84,36 +88,46 @@ export default function App() {
   }
 
   return (
-    <View style={[styles.container, { backgroundColor: generateColor() }]}>
-      <Text
-        style={[
-          { fontWeight: "bold" },
-          { fontSize: 20 },
-          { backgroundColor: generateColor() },
-        ]}
-      >
-        오늘도 빡코딩!!
-      </Text>
+    <GlobalClickCountContext.Provider
+      value={[globalClickCount, setGlobalClickCount]}
+    >
+      <View style={[styles.container, { backgroundColor: generateColor() }]}>
+        <Text
+          style={[
+            { fontWeight: "bold" },
+            { fontSize: 20 },
+            { backgroundColor: generateColor() },
+          ]}
+        >
+          오늘도 빡코딩!!
+        </Text>
 
-      <Text style={[styles.boldText, { backgroundColor: generateColor() }]}>
-        오늘도 빡코딩!! {clickCount}
-      </Text>
+        <Text style={[styles.boldText, { backgroundColor: generateColor() }]}>
+          오늘도 빡코딩!! {clickCount}
+        </Text>
 
-      <StatusBar style="auto" />
-      <Text style={styles.boldText}>클릭수! {clickCount}</Text>
-      <Button
-        title="버튼이다!"
-        onPress={(e) => {
-          setClickCount(clickCount + 1);
-        }}
-      />
-      <SomeComponent
-        clickCount={clickCount}
-        onClick={() => {
-          setClickCount(clickCount + 1);
-        }}
-      />
-    </View>
+        <StatusBar style="auto" />
+        <Text style={styles.boldText}>클릭수! {clickCount}</Text>
+        <Button
+          title="버튼이다!"
+          onPress={(e) => {
+            setClickCount(clickCount + 1);
+          }}
+        />
+        <Button
+          title="글로벌 버튼이다!"
+          onPress={(e) => {
+            setGlobalClickCount(globalClickCount + 1);
+          }}
+        />
+        <SomeComponent
+          clickCount={clickCount}
+          onClick={() => {
+            setClickCount(clickCount + 1);
+          }}
+        />
+      </View>
+    </GlobalClickCountContext.Provider>
   );
 }
 
