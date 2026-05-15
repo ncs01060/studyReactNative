@@ -1,11 +1,18 @@
 import { StatusBar } from "expo-status-bar";
-import { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState } from "react";
 import { Button, StyleSheet, Text, View } from "react-native";
+
+type GlobalClickCountType = {
+  globalClickCount: number;
+  setGlobalClickCount: React.Dispatch<React.SetStateAction<number>>;
+};
 
 export default function App() {
   const [clickCount, setClickCount] = useState<number>(0);
   const [globalClickCount, setGlobalClickCount] = useState<number>(0);
-  const GlobalClickCountContext = createContext();
+  const GlobalClickCountContext = createContext<GlobalClickCountType | null>(
+    null,
+  );
 
   const generateColor = (): string => {
     const randomColor = Math.floor(Math.random() * 16777215)
@@ -15,7 +22,12 @@ export default function App() {
   };
 
   function SomeComponent(props: any) {
-    const [globalCount, setGlobalCount] = useContext(GlobalClickCountContext);
+    const context = useContext(GlobalClickCountContext);
+    if (!context) {
+      throw new Error("Provider 없음");
+    }
+
+    const { globalClickCount, setGlobalClickCount } = context;
 
     return (
       <>
@@ -89,7 +101,7 @@ export default function App() {
 
   return (
     <GlobalClickCountContext.Provider
-      value={[globalClickCount, setGlobalClickCount]}
+      value={{ globalClickCount, setGlobalClickCount }}
     >
       <View style={[styles.container, { backgroundColor: generateColor() }]}>
         <Text
