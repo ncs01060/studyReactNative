@@ -1,6 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 import React, { createContext, useContext, useState } from "react";
 import { Button, StyleSheet, Text, View } from "react-native";
+import Toast from "react-native-toast-message";
 
 type GlobalClickCountType = {
   globalClickCount: number;
@@ -99,12 +100,21 @@ export default function App() {
     );
   }
 
-  function EvenNumberTitle(props: any) {
-    if (props.isEven) {
+  // { isEven }
+  function EvenNumberTitle({ isEven }: { isEven: boolean }) {
+    if (isEven) {
       return <Text>짝수입니다.</Text>;
     }
     return null;
   }
+
+  const showToast = (someValue: number | string): void => {
+    Toast.show({
+      type: "success",
+      text1: `${someValue}`,
+      text2: "This is some something",
+    });
+  };
 
   return (
     <GlobalClickCountContext.Provider
@@ -140,6 +150,12 @@ export default function App() {
             setGlobalClickCount(globalClickCount + 1);
           }}
         />
+        <Button
+          title="토스트 띄우기"
+          onPress={(e) => {
+            showToast(clickCount);
+          }}
+        />
         <SomeComponent
           clickCount={clickCount}
           onClick={() => {
@@ -147,6 +163,7 @@ export default function App() {
           }}
         />
       </View>
+      <Toast />
     </GlobalClickCountContext.Provider>
   );
 }
