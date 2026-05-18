@@ -99,11 +99,19 @@ export default function App() {
     );
   }
 
+  function EvenNumberTitle(props: any) {
+    if (props.isEven) {
+      return <Text>짝수입니다.</Text>;
+    }
+    return null;
+  }
+
   return (
     <GlobalClickCountContext.Provider
       value={{ globalClickCount, setGlobalClickCount }}
     >
       <View style={[styles.container, { backgroundColor: generateColor() }]}>
+        <EvenNumberTitle isEven={clickCount % 2 === 0} />
         <Text
           style={[
             { fontWeight: "bold" },
